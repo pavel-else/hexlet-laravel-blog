@@ -7,11 +7,14 @@ use App\Article;
 
 class ArticleController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $articles = Article::paginate();
-        return view('article.index', compact('articles'));
+        $q = $request->input('q');
+        $articles = $q ? Article::where('name', 'like', "%{$q}%")->paginate() : Article::paginate();
+        // $articles = Article::paginate();
+        return view('article.index', compact('articles', 'q'));
     }
+
     public function show($id)
     {
         $article = Article::findOrFail($id);
